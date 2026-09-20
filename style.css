@@ -1,0 +1,1910 @@
+/* =========================================================
+   GENERAL
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+
+    margin: 0;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    background: #f3f4f6;
+
+    color: #111827;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+header {
+
+    background: #0f172a;
+
+    color: white;
+
+    text-align: center;
+
+    padding: 18px 10px;
+}
+
+
+header h1 {
+
+    margin: 0;
+
+    font-size: 32px;
+}
+
+
+header p {
+
+    margin: 8px 0 0;
+
+    font-size: 16px;
+
+    color: #dbeafe;
+}
+
+
+/* =========================================================
+   MAIN CONTAINER
+   ========================================================= */
+
+.app-container {
+
+    display: flex;
+
+    gap: 20px;
+
+    padding: 20px;
+
+    height: calc(100vh - 104px);
+}
+
+
+/* =========================================================
+   LEFT CONTROL PANEL
+   ========================================================= */
+
+.control-panel {
+
+    width: 320px;
+
+    background: white;
+
+    border-radius: 14px;
+
+    padding: 24px;
+
+    box-shadow:
+        0 5px 20px
+        rgba(0, 0, 0, 0.08);
+
+    overflow-y: auto;
+}
+
+
+.control-panel h2 {
+
+    margin-top: 0;
+
+    margin-bottom: 24px;
+
+    font-size: 24px;
+}
+
+
+.control-panel label {
+
+    display: block;
+
+    font-weight: bold;
+
+    margin-bottom: 8px;
+
+    margin-top: 16px;
+}
+
+
+.control-panel input,
+.control-panel select {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    outline: none;
+}
+
+
+.control-panel input:focus,
+.control-panel select:focus {
+
+    border-color: #2563eb;
+}
+
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+#analyzeRoute {
+
+    width: 100%;
+
+    margin-top: 20px;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+#analyzeRoute:hover {
+
+    background: #1d4ed8;
+}
+
+
+/* =========================================================
+   ROUTE RESULT
+   ========================================================= */
+
+.route-result {
+
+    margin-top: 15px;
+
+    line-height: 1.6;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+hr {
+
+    border: none;
+
+    border-top:
+        1px solid #e5e7eb;
+
+    margin: 25px 0;
+}
+
+
+/* =========================================================
+   ROAD ISSUE
+   ========================================================= */
+
+#issueType {
+
+    margin-bottom: 12px;
+}
+
+
+#issueDescription {
+
+    margin-bottom: 15px;
+}
+
+
+.report-button {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #dc2626;
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+.report-button:hover {
+
+    background: #b91c1c;
+}
+
+
+/* =========================================================
+   MAP CONTAINER
+   ========================================================= */
+
+.map-container {
+
+    flex: 1;
+
+    min-width: 0;
+
+    min-height: 400px;
+
+    position: relative;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 5px 20px
+        rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   ACTUAL LEAFLET MAP
+   ========================================================= */
+
+#map {
+
+    width: 100%;
+
+    height: 100%;
+
+    min-height: 400px;
+}
+
+
+/* =========================================================
+   COMPASS CONTROL
+   ========================================================= */
+
+#compassControl {
+
+    position: absolute;
+
+    top: 12px;
+
+    right: 12px;
+
+    width: 112px;
+
+    padding: 10px;
+
+    background: rgba(255, 255, 255, 0.94);
+
+    border: 1px solid rgba(148, 163, 184, 0.35);
+
+    border-radius: 14px;
+
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.2);
+
+    color: #0f172a;
+
+    z-index: 1000;
+
+    text-align: center;
+
+    font-family: Arial, sans-serif;
+
+    pointer-events: auto;
+}
+
+
+.compass-dial {
+
+    position: relative;
+
+    width: 68px;
+
+    height: 68px;
+
+    margin: 0 auto 6px;
+
+    border: 2px solid #cbd5e1;
+
+    border-radius: 50%;
+
+    background: #f8fafc;
+
+    box-shadow: inset 0 0 0 4px rgba(226, 232, 240, 0.7);
+}
+
+
+.compass-cardinal {
+
+    position: absolute;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    color: #64748b;
+
+    transform: translate(-50%, -50%);
+}
+
+
+.compass-cardinal-north {
+    top: 8px;
+    left: 50%;
+    color: #dc2626;
+}
+
+
+.compass-cardinal-east {
+    top: 50%;
+    left: calc(100% - 8px);
+}
+
+
+.compass-cardinal-south {
+    top: calc(100% - 8px);
+    left: 50%;
+}
+
+
+.compass-cardinal-west {
+    top: 50%;
+    left: 8px;
+}
+
+
+.compass-needle {
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 50%;
+
+    width: 3px;
+
+    height: 43px;
+
+    background: linear-gradient(to bottom, #dc2626 0 50%, #475569 50% 100%);
+
+    border-radius: 4px;
+
+    transform: translate(-50%, -50%) rotate(0deg);
+
+    transform-origin: center;
+
+    transition: transform 180ms ease-out;
+}
+
+
+.compass-needle::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: -5px;
+
+    left: 50%;
+
+    width: 0;
+
+    height: 0;
+
+    border-left: 5px solid transparent;
+
+    border-right: 5px solid transparent;
+
+    border-bottom: 11px solid #dc2626;
+
+    transform: translateX(-50%);
+}
+
+
+.compass-reading {
+
+    display: flex;
+
+    align-items: baseline;
+
+    justify-content: center;
+
+    gap: 5px;
+
+    line-height: 1;
+}
+
+
+#compassHeading {
+    font-size: 14px;
+}
+
+
+#compassDirection {
+    font-size: 11px;
+    font-weight: 700;
+    color: #dc2626;
+}
+
+
+#enableCompassBtn {
+
+    width: 100%;
+    margin-top: 8px;
+    padding: 6px 4px;
+    border: 0;
+    border-radius: 7px;
+    background: #2563eb;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+
+#enableCompassBtn:hover {
+    background: #1d4ed8;
+}
+
+
+#enableCompassBtn:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+
+.compass-status {
+
+    min-height: 22px;
+    margin: 6px 0 0;
+    color: #64748b;
+    font-size: 9px;
+    line-height: 1.25;
+}
+
+
+.compass-calibration {
+
+    display: none;
+    margin: 6px 0 0;
+    color: #92400e;
+    font-size: 9px;
+    line-height: 1.25;
+}
+
+
+.compass-control.is-active .compass-calibration {
+    display: block;
+}
+
+
+/* =========================================================
+   SMART ROUTE DASHBOARD
+   ========================================================= */
+
+#smartRouteDashboard {
+
+    position: absolute;
+
+    top: 12px;
+
+    left: 12px;
+
+    width: 350px;
+
+    max-height: calc(100% - 24px);
+
+    overflow-y: auto;
+
+    padding: 14px;
+
+    background: rgba(255, 255, 255, 0.95);
+
+    border: 1px solid rgba(148, 163, 184, 0.35);
+
+    border-radius: 14px;
+
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.2);
+
+    color: #0f172a;
+
+    z-index: 999;
+
+    font-family: Arial, sans-serif;
+}
+
+
+.dashboard-header {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding-bottom: 12px;
+
+    border-bottom: 1px solid #e2e8f0;
+}
+
+
+.dashboard-header strong,
+.dashboard-header span {
+    display: block;
+}
+
+
+.dashboard-header strong {
+    font-size: 15px;
+}
+
+
+.dashboard-header span {
+    margin-top: 3px;
+    color: #64748b;
+    font-size: 10px;
+}
+
+
+.dashboard-icon-button {
+
+    width: 28px;
+
+    height: 28px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 7px;
+
+    background: #f8fafc;
+
+    color: #334155;
+
+    font-size: 18px;
+
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+
+.dashboard-empty-state {
+
+    display: grid;
+
+    gap: 5px;
+
+    padding: 14px 2px 4px;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    line-height: 1.4;
+}
+
+
+.dashboard-empty-state strong {
+    color: #334155;
+}
+
+
+.dashboard-section {
+    border-bottom: 1px solid #e2e8f0;
+}
+
+
+.dashboard-section-header {
+
+    display: grid;
+
+    grid-template-columns: minmax(0, 1fr) auto auto;
+
+    align-items: center;
+
+    width: 100%;
+
+    gap: 8px;
+
+    min-height: 44px;
+
+    padding: 8px 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: #1e293b;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    text-align: left;
+
+    cursor: pointer;
+}
+
+
+.dashboard-section-header strong {
+    color: #2563eb;
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+
+.dashboard-chevron {
+    color: #64748b;
+    transition: transform 160ms ease;
+}
+
+
+.dashboard-section.is-open .dashboard-chevron {
+    transform: rotate(180deg);
+}
+
+
+.dashboard-section-body {
+
+    display: none;
+
+    padding: 0 0 12px;
+
+    color: #475569;
+
+    font-size: 11px;
+
+    line-height: 1.4;
+}
+
+
+.dashboard-section.is-open .dashboard-section-body {
+    display: block;
+}
+
+
+#smartRouteDashboard:not(.has-route) .dashboard-section {
+    display: none;
+}
+
+
+.dashboard-grid {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+}
+
+
+.dashboard-grid div {
+
+    display: grid;
+
+    gap: 2px;
+
+    padding: 7px;
+
+    border-radius: 7px;
+
+    background: #f8fafc;
+}
+
+
+.dashboard-grid span {
+    color: #64748b;
+    font-size: 9px;
+    text-transform: uppercase;
+}
+
+
+.dashboard-grid strong {
+    color: #0f172a;
+    font-size: 11px;
+}
+
+
+.navigation-card-header,
+.navigation-progress-label,
+.navigation-route-stats,
+.navigation-reading {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+
+.navigation-card-header {
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+
+#navigationStatus {
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+.navigation-reading {
+
+    margin-top: 6px;
+
+    color: #475569;
+
+    font-size: 11px;
+}
+
+
+.navigation-reading strong {
+    color: #0f172a;
+    text-align: right;
+}
+
+
+.navigation-coordinates strong {
+    max-width: 190px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.navigation-progress-label {
+
+    margin-top: 13px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+.navigation-progress-track {
+
+    height: 8px;
+
+    margin-top: 7px;
+
+    overflow: hidden;
+
+    border-radius: 99px;
+
+    background: #dbeafe;
+}
+
+
+.navigation-progress-bar {
+
+    width: 0;
+
+    height: 100%;
+
+    border-radius: inherit;
+
+    background: #2563eb;
+
+    transition: width 220ms ease-out;
+}
+
+
+.navigation-route-stats {
+
+    margin-top: 7px;
+
+    color: #475569;
+
+    font-size: 11px;
+}
+
+
+.navigation-route-status,
+.navigation-destination {
+
+    margin-top: 9px;
+
+    color: #334155;
+
+    font-size: 11px;
+
+    line-height: 1.35;
+}
+
+
+.navigation-route-status.is-off-route {
+    color: #b45309;
+    font-weight: 700;
+}
+
+
+.navigation-route-status.is-far-off-route {
+    color: #dc2626;
+    font-weight: 700;
+}
+
+
+.navigation-actions {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 6px;
+
+    margin-top: 12px;
+}
+
+
+.navigation-actions button {
+
+    min-height: 34px;
+
+    padding: 7px 6px;
+
+    border: 0;
+
+    border-radius: 7px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.navigation-actions button:hover {
+    background: #1d4ed8;
+}
+
+
+.navigation-actions button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+
+#stopLiveLocationBtn {
+    background: #dc2626;
+}
+
+
+#stopLiveLocationBtn:hover {
+    background: #b91c1c;
+}
+
+
+.navigation-disclaimer {
+
+    margin: 9px 0 0;
+
+    color: #64748b;
+
+    font-size: 9px;
+
+    line-height: 1.3;
+}
+
+
+.user-location-marker {
+
+    position: relative;
+
+    width: 30px;
+
+    height: 30px;
+}
+
+
+.location-pulse {
+
+    position: absolute;
+
+    inset: 0;
+
+    border: 2px solid rgba(37, 99, 235, 0.32);
+
+    border-radius: 50%;
+
+    background: rgba(96, 165, 250, 0.22);
+
+    animation: location-pulse 1.8s ease-out infinite;
+}
+
+
+.location-dot {
+
+    position: absolute;
+
+    top: 7px;
+
+    left: 7px;
+
+    width: 16px;
+
+    height: 16px;
+
+    border: 3px solid white;
+
+    border-radius: 50%;
+
+    background: #2563eb;
+
+    box-shadow: 0 1px 5px rgba(15, 23, 42, 0.35);
+}
+
+
+@keyframes location-pulse {
+    0% { transform: scale(0.85); opacity: 0.85; }
+    70%, 100% { transform: scale(1.35); opacity: 0; }
+}
+
+
+/* =========================================================
+   WEATHER CARD
+   ========================================================= */
+
+#weatherCard {
+
+    position: fixed;
+
+    bottom: 25px;
+
+    right: 25px;
+
+    width: 300px;
+
+    background: white;
+
+    border-radius: 14px;
+
+    padding: 18px;
+
+    z-index: 99999;
+
+    box-shadow:
+        0 8px 30px
+        rgba(0, 0, 0, 0.25);
+
+    border-left:
+        6px solid #2563eb;
+
+    font-family: Arial, sans-serif;
+
+    color: #111827;
+
+    max-height: min(72vh, 620px);
+
+    overflow-y: auto;
+}
+
+
+.weather-card-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 18px;
+
+    color: #1d4ed8;
+
+    margin-bottom: 15px;
+}
+
+
+.weather-card-header button {
+
+    margin-left: auto;
+
+    border: 0;
+
+    border-radius: 6px;
+
+    padding: 4px 6px;
+
+    background: #dbeafe;
+
+    color: #1d4ed8;
+
+    cursor: pointer;
+}
+
+
+.route-weather-point {
+
+    padding: 10px 0;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.route-weather-point:last-child {
+    border-bottom: 0;
+}
+
+
+.route-weather-point .weather-main {
+    font-size: 21px;
+}
+
+
+.route-weather-point .weather-main span {
+    font-size: 13px;
+    font-weight: 400;
+}
+
+
+.route-weather-summary {
+
+    margin-top: 12px;
+
+    padding-top: 12px;
+
+    border-top: 1px solid #cbd5e1;
+}
+
+
+.route-weather-summary p {
+    margin: 7px 0;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+}
+
+
+.route-weather-warning {
+
+    margin-top: 12px;
+
+    padding: 9px;
+
+    border-radius: 8px;
+
+    background: #fff7ed;
+
+    color: #9a3412;
+
+    font-size: 12px;
+
+    line-height: 1.4;
+}
+
+
+.route-weather-marker {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 2px;
+
+    width: 58px !important;
+
+    padding: 2px 4px;
+
+    border: 1px solid rgba(148, 163, 184, 0.5);
+
+    border-radius: 6px;
+
+    background: rgba(255, 255, 255, 0.88);
+
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.16);
+
+    font-size: 13px;
+}
+
+
+.route-weather-marker small {
+
+    overflow: hidden;
+
+    color: #475569;
+
+    font-size: 8px;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+.weather-location {
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #374151;
+}
+
+
+.weather-main {
+
+    font-size: 28px;
+
+    font-weight: bold;
+
+    margin: 6px 0;
+}
+
+
+.weather-small {
+
+    margin-top: 7px;
+
+    font-size: 13px;
+
+    color: #6b7280;
+}
+
+
+#weatherCard hr {
+
+    border: none;
+
+    border-top:
+        1px solid #e5e7eb;
+
+    margin: 15px 0;
+}
+
+
+/* =========================================================
+   ROUTE ISSUE ALERT
+   ========================================================= */
+
+#routeIssueAlert {
+
+    position: fixed;
+
+    top: 25px;
+
+    right: 25px;
+
+    width: 320px;
+
+    background: white;
+
+    border-radius: 14px;
+
+    padding: 18px;
+
+    z-index: 99999;
+
+    box-shadow:
+        0 8px 30px
+        rgba(0, 0, 0, 0.25);
+
+    border-left:
+        6px solid #dc2626;
+
+    font-family: Arial, sans-serif;
+}
+
+
+.route-alert-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 18px;
+
+    color: #dc2626;
+
+    margin-bottom: 12px;
+}
+
+
+.route-alert-type {
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    margin-bottom: 8px;
+}
+
+
+.route-alert-description {
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    color: #4b5563;
+
+    margin-bottom: 12px;
+}
+
+
+.route-alert-distance,
+.route-alert-position {
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    margin-bottom: 12px;
+}
+
+
+#closeRouteAlert {
+
+    width: 100%;
+
+    border: none;
+
+    border-radius: 8px;
+
+    padding: 10px;
+
+    background: #dc2626;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .app-container {
+
+        flex-direction: column;
+
+        height: auto;
+    }
+
+
+    .control-panel {
+
+        width: 100%;
+    }
+
+
+    .map-container {
+
+        width: 100%;
+
+        height: 500px;
+    }
+
+
+    #map {
+
+        height: 500px;
+    }
+
+
+    #weatherCard {
+
+        left: 15px;
+
+        right: 15px;
+
+        bottom: 15px;
+
+        width: auto;
+    }
+
+
+    #compassControl {
+
+        top: 10px;
+
+        right: 10px;
+
+        width: 82px;
+
+        padding: 7px;
+    }
+
+
+
+    #smartRouteDashboard {
+
+        top: auto;
+
+        right: 0;
+
+        bottom: 0;
+
+        left: 0;
+
+        width: 100%;
+
+        max-height: 43%;
+
+        padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+
+        border-radius: 14px 14px 0 0;
+
+        border-bottom: 0;
+    }
+
+
+    #smartRouteDashboard.is-minimized {
+        width: 100%;
+        max-height: 74px;
+    }
+
+
+    .dashboard-section-header {
+        min-height: 40px;
+    }
+
+
+    .navigation-actions button {
+        min-height: 38px;
+    }
+
+
+    .compass-dial {
+
+        width: 58px;
+
+        height: 58px;
+    }
+
+
+    .compass-needle {
+        height: 36px;
+    }
+
+
+    #enableCompassBtn {
+
+        font-size: 9px;
+
+        padding: 6px 2px;
+    }
+}
+
+
+.dashboard-weather-summary {
+
+    display: grid;
+
+    gap: 4px;
+
+    padding: 8px;
+
+    border-radius: 8px;
+
+    background: #f8fafc;
+}
+
+
+.dashboard-weather-summary strong {
+    color: #0f172a;
+    font-size: 18px;
+}
+
+
+.dashboard-weather-summary em {
+    color: #475569;
+    font-size: 10px;
+}
+
+
+.dashboard-weather-actions {
+
+    display: flex;
+
+    gap: 6px;
+
+    margin-top: 8px;
+}
+
+
+.dashboard-detail-button {
+
+    padding: 6px 8px;
+
+    border: 1px solid #bfdbfe;
+
+    border-radius: 6px;
+
+    background: #eff6ff;
+
+    color: #1d4ed8;
+
+    font-size: 10px;
+
+    cursor: pointer;
+}
+
+
+.dashboard-detail-list {
+
+    display: grid;
+
+    gap: 6px;
+
+    margin-top: 8px;
+}
+
+
+.dashboard-detail-list > div,
+.dashboard-issue-item {
+
+    display: grid;
+
+    gap: 2px;
+
+    padding: 7px;
+
+    border-left: 3px solid #93c5fd;
+
+    background: #f8fafc;
+}
+
+
+.dashboard-detail-list span,
+.dashboard-detail-list small,
+.dashboard-issue-item span,
+.dashboard-muted {
+    color: #64748b;
+    font-size: 10px;
+}
+
+
+.dashboard-loading {
+    color: #2563eb;
+    font-weight: 700;
+}
+
+
+.dashboard-risk-score {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 7px;
+
+    color: #b45309;
+
+    font-weight: 700;
+}
+
+
+.dashboard-section-body ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+
+.dashboard-issue-item + .dashboard-issue-item {
+    margin-top: 6px;
+}
+
+
+.terrain-summary-grid {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 6px;
+}
+
+
+.terrain-summary-grid span {
+
+    display: grid;
+
+    gap: 2px;
+
+    padding: 7px;
+
+    border-radius: 7px;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    font-size: 9px;
+}
+
+
+.terrain-summary-grid strong {
+    color: #0f172a;
+    font-size: 11px;
+}
+
+
+.terrain-classification {
+
+    margin-top: 8px;
+
+    color: #475569;
+
+    font-size: 11px;
+}
+
+
+.terrain-classification strong {
+    color: #b45309;
+}
+
+
+.terrain-warning {
+
+    margin-top: 8px;
+
+    padding: 7px;
+
+    border-radius: 7px;
+
+    background: #fff7ed;
+
+    color: #9a3412;
+
+    font-size: 10px;
+}
+
+
+.terrain-profile-wrap {
+
+    margin-top: 8px;
+
+    padding: 5px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 7px;
+
+    background: #f8fafc;
+}
+
+
+.terrain-profile {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+
+.terrain-profile line {
+    stroke: #cbd5e1;
+    stroke-width: 1;
+}
+
+
+.terrain-profile polyline {
+    fill: rgba(59, 130, 246, 0.14);
+    stroke: #2563eb;
+    stroke-width: 2;
+}
+
+
+.terrain-profile text {
+    fill: #64748b;
+    font-size: 7px;
+}
+
+
+.terrain-source {
+
+    margin: 7px 0;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+}
+
+
+.route-terrain-marker {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 2px;
+
+    width: 62px !important;
+
+    padding: 2px 4px;
+
+    border: 1px solid rgba(148, 163, 184, 0.45);
+
+    border-radius: 6px;
+
+    background: rgba(255, 255, 255, 0.86);
+
+    box-shadow: 0 2px 5px rgba(15, 23, 42, 0.14);
+
+    font-size: 12px;
+}
+
+
+.route-terrain-marker small {
+    overflow: hidden;
+    color: #475569;
+    font-size: 8px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.route-hazard-marker {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    width: 72px !important;
+    padding: 2px 4px;
+    border: 1px solid rgba(14, 165, 233, 0.5);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 5px rgba(15, 23, 42, 0.14);
+    font-size: 12px;
+}
+
+
+.route-hazard-marker small {
+    overflow: hidden;
+    color: #0369a1;
+    font-size: 8px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+#smartRouteDashboard.is-minimized .dashboard-section,
+#smartRouteDashboard.is-minimized .dashboard-empty-state,
+#smartRouteDashboard.is-minimized .navigation-disclaimer {
+    display: none;
+}
+
+
+#smartRouteDashboard.is-minimized {
+    width: 220px;
+}
+
+
+@media (max-width: 800px) {
+
+    #smartRouteDashboard.is-minimized {
+        right: 0;
+        left: 0;
+        width: 100%;
+    }
+}
+
+
+.route-comparison-list {
+    display: grid;
+    gap: 8px;
+}
+
+
+.route-comparison-card {
+    display: grid;
+    gap: 7px;
+    padding: 9px;
+    border: 1px solid #e2e8f0;
+    border-left: 3px solid #f59e0b;
+    background: #fffaf0;
+}
+
+
+.route-comparison-card.is-active {
+    border-left-color: #2563eb;
+    background: #eff6ff;
+}
+
+
+.route-comparison-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    color: #0f172a;
+}
+
+
+.route-comparison-heading span {
+    color: #64748b;
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+
+.route-comparison-metrics {
+    display: grid;
+    gap: 3px;
+    color: #475569;
+    font-size: 10px;
+}
+
+
+.hazard-indicator {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 9px;
+    padding: 8px;
+    border-left: 3px solid #0ea5e9;
+    background: #f8fafc;
+}
+
+
+.hazard-indicator-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    color: #0f172a;
+}
+
+
+.hazard-indicator-heading span {
+    color: #b45309;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+
+.hazard-indicator > span,
+.hazard-indicator li,
+.hazard-disclaimer,
+.hazard-sources {
+    color: #64748b;
+    font-size: 10px;
+}
+
+
+.hazard-indicator ul {
+    margin: 0;
+    padding-left: 16px;
+}
+
+
+.hazard-disclaimer {
+    margin: 6px 0;
+}
+
+
+.hazard-sources {
+    color: #94a3b8;
+}
+
+
+.ai-route-result {
+    display: grid;
+    gap: 4px;
+    padding: 8px;
+    border-left: 3px solid #7c3aed;
+    background: #faf5ff;
+}
+
+
+.ai-route-result p,
+.ai-route-result li {
+    margin: 0;
+    color: #475569;
+    font-size: 10px;
+}
+
+
+.ai-route-result ul {
+    margin: 0 0 3px;
+    padding-left: 16px;
+}
+
+
+.data-status-summary,
+.data-status-grid {
+    display: grid;
+    gap: 6px;
+}
+
+
+.data-status-summary {
+    margin-bottom: 8px;
+}
+
+
+.data-status-summary span,
+.data-status-grid span {
+    color: #64748b;
+    font-size: 10px;
+}
+
+
+.data-status-grid {
+    grid-template-columns: 1fr 1fr;
+}
+
+
+.data-status-grid span {
+    display: grid;
+    gap: 2px;
+    padding: 6px;
+    background: #f8fafc;
+}
+
+
+.data-status-grid strong {
+    color: #0f172a;
+    font-size: 10px;
+}
+
+
+.network-status-live {
+    color: #15803d;
+}
+
+
+.network-status-syncing {
+    color: #a16207;
+}
+
+
+.network-status-offline {
+    color: #b91c1c;
+}
+
+
+.pending-issue-marker {
+    display: grid;
+    place-items: center;
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 23px;
+    filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.35));
+}

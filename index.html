@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+ 
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        NER Smart Logistics
+    </title>
+
+
+    <!-- =====================================================
+         LEAFLET CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+
+    <!-- YOUR CSS -->
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header>
+
+        <h1>
+            NER Smart Logistics
+        </h1>
+
+        <p>
+            AI-Based Logistics & Accessibility Intelligence Platform
+        </p>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN APPLICATION
+         ===================================================== -->
+
+    <main class="app-container">
+
+
+        <!-- =================================================
+             LEFT PANEL
+             ================================================= -->
+
+        <section class="control-panel">
+
+            <h2>
+                Plan Your Route
+            </h2>
+
+
+            <!-- FROM -->
+
+            <label for="start">
+                From
+            </label>
+
+            <input
+                type="text"
+                id="start"
+                placeholder="Enter starting location"
+            >
+
+
+            <!-- TO -->
+
+            <label for="end">
+                To
+            </label>
+
+            <input
+                type="text"
+                id="end"
+                placeholder="Enter destination"
+            >
+
+
+            <!-- ANALYZE -->
+
+            <button
+                id="analyzeRoute"
+                type="button"
+            >
+                Analyze Route
+            </button>
+
+
+            <!-- ROUTE RESULT -->
+
+            <div
+                id="routeResult"
+                class="route-result"
+            ></div>
+
+
+            <hr>
+
+
+            <!-- =================================================
+                 ROAD ISSUE REPORTING
+                 ================================================= -->
+
+            <h2>
+                Report Road Issue
+            </h2>
+
+
+            <select id="issueType">
+
+                <option value="">
+                    Select Issue Type
+                </option>
+
+                <option value="Road Block">
+                    Road Block
+                </option>
+
+                <option value="Accident">
+                    Accident
+                </option>
+
+                <option value="Flood">
+                    Flood
+                </option>
+
+                <option value="Landslide">
+                    Landslide
+                </option>
+
+                <option value="Traffic">
+                    Traffic
+                </option>
+
+                <option value="Road Damage">
+                    Road Damage
+                </option>
+
+            </select>
+
+
+            <input
+                type="text"
+                id="issueDescription"
+                placeholder="Describe the issue"
+            >
+
+
+            <button
+                id="reportIssue"
+                type="button"
+                class="report-button"
+            >
+                Report Issue
+            </button>
+
+        </section>
+
+
+        <!-- =================================================
+             MAP
+             ================================================= -->
+
+        <section class="map-container">
+
+            <div id="map"></div>
+
+            <aside id="compassControl" class="compass-control" aria-label="Device compass">
+                <div id="compassDial" class="compass-dial" aria-hidden="true">
+                    <span class="compass-cardinal compass-cardinal-north">N</span>
+                    <span class="compass-cardinal compass-cardinal-east">E</span>
+                    <span class="compass-cardinal compass-cardinal-south">S</span>
+                    <span class="compass-cardinal compass-cardinal-west">W</span>
+                    <span id="compassNeedle" class="compass-needle"></span>
+                </div>
+
+                <div class="compass-reading">
+                    <strong id="compassHeading">--°</strong>
+                    <span id="compassDirection">N</span>
+                </div>
+
+                <button id="enableCompassBtn" type="button">
+                    Enable Compass
+                </button>
+
+                <p id="compassStatus" class="compass-status" role="status">
+                    Compass Off
+                </p>
+
+                <p id="compassCalibration" class="compass-calibration">
+                    Move your phone in a figure-8 motion if the compass is inaccurate.
+                </p>
+            </aside>
+
+            <aside id="smartRouteDashboard" class="smart-route-dashboard" aria-label="Smart Route Intelligence">
+                <div class="dashboard-header">
+                    <div>
+                        <strong>🧠 Smart Route Intelligence</strong>
+                        <span id="dashboardRouteState">Route monitoring workspace</span>
+                    </div>
+                    <button id="dashboardMinimizeBtn" class="dashboard-icon-button" type="button" aria-label="Minimize dashboard">−</button>
+                </div>
+
+                <div id="dashboardEmptyState" class="dashboard-empty-state">
+                    <strong>Plan a route to see:</strong>
+                    <span>Live navigation, route weather, route risk, and road issues.</span>
+                </div>
+
+                <section class="dashboard-section is-open" data-dashboard-section="navigation">
+                    <button class="dashboard-section-header" type="button" aria-expanded="true">
+                        <span>🧭 Live Navigation</span><strong id="dashboardNavigationValue">No route</strong><span class="dashboard-chevron">⌄</span>
+                    </button>
+                    <div class="dashboard-section-body">
+                        <div class="dashboard-grid">
+                            <div><span>GPS</span><strong id="navigationStatus">GPS: Off</strong></div>
+                            <div><span>Heading</span><strong id="navigationHeading">Unavailable</strong></div>
+                            <div><span>Accuracy</span><strong id="gpsAccuracy">--</strong></div>
+                            <div><span>Progress</span><strong id="navigationProgress">--</strong></div>
+                            <div><span>Completed</span><strong id="navigationDistance">--</strong></div>
+                            <div><span>Remaining</span><strong id="navigationRemaining">--</strong></div>
+                            <div><span>ETA</span><strong id="navigationEta">--</strong></div>
+                        </div>
+                        <div class="navigation-progress-track" aria-hidden="true"><div id="navigationProgressBar" class="navigation-progress-bar"></div></div>
+                        <div id="navigationRouteStatus" class="navigation-route-status">Route status: No route</div>
+                        <div id="navigationDestination" class="navigation-destination">Distance to destination: --</div>
+                        <div class="navigation-actions">
+                            <button id="startLiveLocationBtn" type="button">Start Live Location</button>
+                            <button id="followUserBtn" type="button" disabled>Follow Me</button>
+                            <button id="stopLiveLocationBtn" type="button" hidden>Stop</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="dashboard-section" data-dashboard-section="weather">
+                    <button class="dashboard-section-header" type="button" aria-expanded="false">
+                        <span>🌦️ Route Weather</span><strong id="dashboardWeatherValue">No route</strong><span class="dashboard-chevron">⌄</span>
+                    </button>
+                    <div id="dashboardWeatherBody" class="dashboard-section-body"></div>
+                </section>
+
+                <section class="dashboard-section" data-dashboard-section="risk">
+                    <button class="dashboard-section-header" type="button" aria-expanded="false">
+                        <span>⚠️ Route Risk</span><strong id="dashboardRiskValue">No route</strong><span class="dashboard-chevron">⌄</span>
+                    </button>
+                    <div id="dashboardRiskBody" class="dashboard-section-body"></div>
+                </section>
+
+                <section class="dashboard-section" data-dashboard-section="issues">
+                    <button class="dashboard-section-header" type="button" aria-expanded="false">
+                        <span>🚧 Road Issues</span><strong id="dashboardIssuesValue">No route</strong><span class="dashboard-chevron">⌄</span>
+                    </button>
+                    <div id="dashboardIssuesBody" class="dashboard-section-body"></div>
+                </section>
+
+                <section class="dashboard-section" data-dashboard-section="terrain">
+                    <button class="dashboard-section-header" type="button" aria-expanded="false">
+                        <span>🏔️ Terrain</span><strong id="dashboardTerrainValue">No route</strong><span class="dashboard-chevron">⌄</span>
+                    </button>
+                    <div id="dashboardTerrainBody" class="dashboard-section-body"></div>
+                </section>
+
+                <section class="dashboard-section" data-dashboard-section="alternatives">
+                    <button class="dashboard-section-header" type="button" aria-expanded="false">
+                        <span>🛣️ Alternative Routes</span><strong id="dashboardAlternativesValue">No route</strong><span class="dashboard-chevron">⌄</span>
+                    </button>
+                    <div id="dashboardAlternativesBody" class="dashboard-section-body"></div>
+                </section>
+
+                <section class="dashboard-section" data-dashboard-section="hazards">
+                    <button class="dashboard-section-header" type="button" aria-expanded="false">
+                        <span>🌊 Hazard Intelligence</span><strong id="dashboardHazardValue">No route</strong><span class="dashboard-chevron">⌄</span>
+                    </button>
+                    <div id="dashboardHazardBody" class="dashboard-section-body"></div>
+                </section>
+
+                <section class="dashboard-section" data-dashboard-section="ai-route">
+                    <button class="dashboard-section-header" type="button" aria-expanded="false">
+                        <span>🤖 AI Route Intelligence</span><strong id="dashboardAiValue">Ready</strong><span class="dashboard-chevron">⌄</span>
+                    </button>
+                    <div id="dashboardAiBody" class="dashboard-section-body"></div>
+                </section>
+
+                <section class="dashboard-section" data-dashboard-section="data-status">
+                    <button class="dashboard-section-header" type="button" aria-expanded="false">
+                        <span>📡 Data Status</span><strong id="dashboardDataStatusValue">Live</strong><span class="dashboard-chevron">⌄</span>
+                    </button>
+                    <div id="dashboardDataStatusBody" class="dashboard-section-body"></div>
+                </section>
+
+                <p class="navigation-disclaimer">Approximate GPS route tracking. Not turn-by-turn navigation.</p>
+            </aside>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         LEAFLET JAVASCRIPT
+         ===================================================== -->
+
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    ></script>
+
+
+    <!-- =====================================================
+         SUPABASE JAVASCRIPT
+         ===================================================== -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+
+    <!-- =====================================================
+         YOUR APP JAVASCRIPT
+         ===================================================== -->
+
+    <script
+        src="app.js"
+    ></script>
+
+
+    <!-- =====================================================
+         ANALYZE ROUTE BUTTON
+         ===================================================== -->
+
+    <script>
+
+        const analyzeButton =
+            document.getElementById(
+                "analyzeRoute"
+            );
+
+        if (analyzeButton) {
+
+            analyzeButton.addEventListener(
+                "click",
+                analyzeRoute
+            );
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>
