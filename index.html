@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <meta name="description" content="NER Smart Logistics - AI-Powered Smart Logistics & Geospatial Intelligence Command Center">
     <meta name="theme-color" content="#0b1120">
 
@@ -24,7 +24,7 @@
 <body>
 
     <!-- =====================================================
-         HEADER: COMMAND CENTER TOP BAR
+         HEADER: COMMAND CENTER TOP BAR WITH DESKTOP NAV
          ===================================================== -->
     <header class="app-header">
         <div class="header-brand">
@@ -44,13 +44,29 @@
             </div>
         </div>
 
+        <!-- DESKTOP TOP NAVIGATION -->
+        <nav class="desktop-nav" aria-label="Main Navigation">
+            <button class="nav-tab active" data-view="map" type="button" aria-selected="true">
+                <span class="nav-tab-icon">🗺️</span>
+                <span class="nav-tab-label">Map</span>
+            </button>
+            <button class="nav-tab" data-view="intelligence" type="button" aria-selected="false">
+                <span class="nav-tab-icon">🧠</span>
+                <span class="nav-tab-label">Intelligence</span>
+            </button>
+            <button class="nav-tab" data-view="reports" type="button" aria-selected="false">
+                <span class="nav-tab-icon">🚧</span>
+                <span class="nav-tab-label">Field Reports</span>
+            </button>
+        </nav>
+
         <div class="header-telemetry">
-            <div class="telemetry-pill">
+            <div class="telemetry-pill zone-pill">
                 <span class="telemetry-dot region-dot"></span>
                 <span class="telemetry-label">ZONE:</span>
                 <strong class="telemetry-value">NER INDIA</strong>
             </div>
-            <div class="telemetry-pill">
+            <div class="telemetry-pill network-pill">
                 <span class="telemetry-label">NETWORK:</span>
                 <strong id="networkStatusValue" class="telemetry-value network-status-indicator">🟢 LIVE</strong>
             </div>
@@ -58,303 +74,361 @@
     </header>
 
     <!-- =====================================================
-         MAIN APPLICATION
+         MAIN MULTI-VIEW WORKSPACE CONTAINER
          ===================================================== -->
     <main class="app-container">
 
         <!-- =================================================
-             LEFT CONTROL PANEL (ROUTE PLANNING & INCIDENT LOG)
+             PAGE 1 — 🗺️ MAP & PRIMARY NAVIGATION WORKSPACE
              ================================================= -->
-        <section class="control-panel" aria-label="Route Planning and Issue Reporting Controls">
+        <section id="viewMap" class="app-view active-view" aria-label="Map and Navigation Workspace">
             
-            <div class="panel-section-header">
-                <div class="section-title-wrap">
-                    <span class="section-icon" aria-hidden="true">🎯</span>
-                    <h2>Plan Your Route</h2>
+            <!-- MAP ROUTE PLANNING CONSOLE -->
+            <div class="map-route-console" aria-label="Route Planning Controls">
+                <div class="console-header">
+                    <div class="console-title">
+                        <span class="console-icon">🎯</span>
+                        <strong>Plan Your Route</strong>
+                    </div>
+                    <span class="section-badge">OSRM / AI</span>
                 </div>
-                <span class="section-badge">OSRM / AI</span>
-            </div>
 
-            <div class="form-group">
-                <label for="start">
-                    <span class="label-icon origin-icon" aria-hidden="true">🟢</span>
-                    <span>From (Origin)</span>
-                </label>
-                <div class="input-wrapper">
-                    <input
-                        type="text"
-                        id="start"
-                        placeholder="Enter starting city or landmark (e.g. Guwahati)"
-                        autocomplete="off"
-                        spellcheck="false"
+                <div class="route-inputs-grid">
+                    <div class="form-group-compact">
+                        <label for="start">
+                            <span class="label-icon origin-icon">🟢</span>
+                            <span>From</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input
+                                type="text"
+                                id="start"
+                                placeholder="Origin city (e.g. Guwahati)"
+                                autocomplete="off"
+                                spellcheck="false"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group-compact">
+                        <label for="end">
+                            <span class="label-icon dest-icon">🔴</span>
+                            <span>To</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input
+                                type="text"
+                                id="end"
+                                placeholder="Destination (e.g. Shillong)"
+                                autocomplete="off"
+                                spellcheck="false"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- ANALYZE BUTTON -->
+                    <button
+                        id="analyzeRoute"
+                        type="button"
+                        class="analyze-button"
                     >
+                        <span class="btn-icon" aria-hidden="true">⚡</span>
+                        <span class="btn-text">Analyze Route</span>
+                    </button>
                 </div>
+
+                <!-- ROUTE RESULT TELEMETRY -->
+                <div
+                    id="routeResult"
+                    class="route-result"
+                    role="region"
+                    aria-live="polite"
+                ></div>
             </div>
 
-            <div class="form-group">
-                <label for="end">
-                    <span class="label-icon dest-icon" aria-hidden="true">🔴</span>
-                    <span>To (Destination)</span>
-                </label>
-                <div class="input-wrapper">
-                    <input
-                        type="text"
-                        id="end"
-                        placeholder="Enter destination (e.g. Shillong)"
-                        autocomplete="off"
-                        spellcheck="false"
-                    >
-                </div>
+            <!-- MAP STAGE (FULL WORKSPACE) -->
+            <div class="map-stage-wrapper">
+                <div id="map" role="application" aria-label="Interactive Logistics Map"></div>
+
+                <!-- COMPASS HUD WIDGET -->
+                <aside id="compassControl" class="compass-control" aria-label="Device compass">
+                    <div class="compass-header">
+                        <span class="compass-title">BEARING</span>
+                    </div>
+                    <div id="compassDial" class="compass-dial" aria-hidden="true">
+                        <div class="compass-ring"></div>
+                        <span class="compass-cardinal compass-cardinal-north">N</span>
+                        <span class="compass-cardinal compass-cardinal-east">E</span>
+                        <span class="compass-cardinal compass-cardinal-south">S</span>
+                        <span class="compass-cardinal compass-cardinal-west">W</span>
+                        <span id="compassNeedle" class="compass-needle"></span>
+                        <div class="compass-center-pivot"></div>
+                    </div>
+
+                    <div class="compass-reading">
+                        <strong id="compassHeading">--°</strong>
+                        <span id="compassDirection">N</span>
+                    </div>
+
+                    <button id="enableCompassBtn" type="button" class="compass-button">
+                        Enable Compass
+                    </button>
+
+                    <p id="compassStatus" class="compass-status" role="status">
+                        Compass Off
+                    </p>
+
+                    <p id="compassCalibration" class="compass-calibration">
+                        Move device in figure-8 to calibrate.
+                    </p>
+                </aside>
             </div>
-
-            <!-- ANALYZE BUTTON -->
-            <button
-                id="analyzeRoute"
-                type="button"
-                class="analyze-button"
-            >
-                <span class="btn-icon" aria-hidden="true">⚡</span>
-                <span class="btn-text">Analyze Route</span>
-            </button>
-
-            <!-- ROUTE RESULT TELEMETRY -->
-            <div
-                id="routeResult"
-                class="route-result"
-                role="region"
-                aria-live="polite"
-            ></div>
-
-            <hr class="panel-divider">
-
-            <!-- =================================================
-                 ROAD ISSUE REPORTING
-                 ================================================= -->
-            <div class="panel-section-header">
-                <div class="section-title-wrap">
-                    <span class="section-icon" aria-hidden="true">⚠️</span>
-                    <h2>Report Road Issue</h2>
-                </div>
-                <span class="section-badge report-badge">FIELD INTEL</span>
-            </div>
-
-            <div class="form-group">
-                <label for="issueType">
-                    <span>Incident Classification</span>
-                </label>
-                <div class="select-wrapper">
-                    <select id="issueType" aria-label="Select incident type">
-                        <option value="">Select Issue Type</option>
-                        <option value="Road Block">🚧 Road Block</option>
-                        <option value="Accident">💥 Accident</option>
-                        <option value="Flood">🌊 Flood</option>
-                        <option value="Landslide">⛰️ Landslide</option>
-                        <option value="Traffic">🚗 Traffic</option>
-                        <option value="Road Damage">🕳️ Road Damage</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="issueDescription">
-                    <span>Location Details &amp; Severity</span>
-                </label>
-                <div class="input-wrapper">
-                    <input
-                        type="text"
-                        id="issueDescription"
-                        placeholder="Describe exact conditions, obstruction or hazard"
-                        autocomplete="off"
-                    >
-                </div>
-            </div>
-
-            <button
-                id="reportIssue"
-                type="button"
-                class="report-button"
-            >
-                <span class="btn-icon" aria-hidden="true">📡</span>
-                <span class="btn-text">Transmit Issue Report</span>
-            </button>
 
         </section>
 
         <!-- =================================================
-             MAP WORKSPACE & HUD OVERLAYS
+             PAGE 2 — 🧠 SMART ROUTE INTELLIGENCE DASHBOARD
              ================================================= -->
-        <section class="map-container" aria-label="Geospatial Map Workspace">
+        <section id="viewIntelligence" class="app-view" aria-label="Smart Route Intelligence Dashboard View">
+            <div class="view-content-scrollable">
+                <div class="view-inner-container">
 
-            <div id="map" role="application" aria-label="Interactive Logistics Map"></div>
-
-            <!-- COMPASS HUD WIDGET -->
-            <aside id="compassControl" class="compass-control" aria-label="Device compass">
-                <div class="compass-header">
-                    <span class="compass-title">BEARING</span>
-                </div>
-                <div id="compassDial" class="compass-dial" aria-hidden="true">
-                    <div class="compass-ring"></div>
-                    <span class="compass-cardinal compass-cardinal-north">N</span>
-                    <span class="compass-cardinal compass-cardinal-east">E</span>
-                    <span class="compass-cardinal compass-cardinal-south">S</span>
-                    <span class="compass-cardinal compass-cardinal-west">W</span>
-                    <span id="compassNeedle" class="compass-needle"></span>
-                    <div class="compass-center-pivot"></div>
-                </div>
-
-                <div class="compass-reading">
-                    <strong id="compassHeading">--°</strong>
-                    <span id="compassDirection">N</span>
-                </div>
-
-                <button id="enableCompassBtn" type="button" class="compass-button">
-                    Enable Compass
-                </button>
-
-                <p id="compassStatus" class="compass-status" role="status">
-                    Compass Off
-                </p>
-
-                <p id="compassCalibration" class="compass-calibration">
-                    Move device in figure-8 to calibrate.
-                </p>
-            </aside>
-
-            <!-- SMART ROUTE INTELLIGENCE DASHBOARD HUD -->
-            <aside id="smartRouteDashboard" class="smart-route-dashboard" aria-label="Smart Route Intelligence Dashboard">
-                <div class="dashboard-header">
-                    <div class="dashboard-title-group">
-                        <div class="dashboard-title-row">
-                            <span class="ai-spark-icon" aria-hidden="true">🧠</span>
-                            <strong>Smart Route Intelligence</strong>
+                    <!-- INTELLIGENCE DASHBOARD -->
+                    <div id="smartRouteDashboard" class="smart-route-dashboard intelligence-page-dashboard" aria-label="Smart Route Intelligence Dashboard">
+                        
+                        <div class="dashboard-header">
+                            <div class="dashboard-title-group">
+                                <div class="dashboard-title-row">
+                                    <span class="ai-spark-icon" aria-hidden="true">🧠</span>
+                                    <strong>Smart Route Intelligence</strong>
+                                </div>
+                                <span id="dashboardRouteState" class="dashboard-route-state">Route monitoring workspace</span>
+                            </div>
+                            <button id="dashboardMinimizeBtn" class="dashboard-icon-button" type="button" aria-label="Minimize dashboard" style="display: none;">−</button>
                         </div>
-                        <span id="dashboardRouteState" class="dashboard-route-state">Route monitoring workspace</span>
+
+                        <div id="dashboardEmptyState" class="dashboard-empty-state">
+                            <div class="empty-state-badge">AWAITING ROUTE</div>
+                            <strong>Plan a route on the Map tab to unlock intelligence telemetry:</strong>
+                            <span>Live navigation, multivariant weather, terrain analysis, real-time hazard alerts &amp; AI logistics briefing.</span>
+                        </div>
+
+                        <!-- 1. NAVIGATION -->
+                        <section class="dashboard-section is-open" data-dashboard-section="navigation">
+                            <button class="dashboard-section-header" type="button" aria-expanded="true">
+                                <span class="section-label-group"><span class="section-glyph">🧭</span> Live Navigation</span>
+                                <strong id="dashboardNavigationValue" class="section-stat-pill">No route</strong>
+                                <span class="dashboard-chevron">⌄</span>
+                            </button>
+                            <div class="dashboard-section-body">
+                                <div class="dashboard-grid">
+                                    <div class="telemetry-cell"><span>GPS</span><strong id="navigationStatus">GPS: Off</strong></div>
+                                    <div class="telemetry-cell"><span>Heading</span><strong id="navigationHeading">Unavailable</strong></div>
+                                    <div class="telemetry-cell"><span>Accuracy</span><strong id="gpsAccuracy">--</strong></div>
+                                    <div class="telemetry-cell"><span>Progress</span><strong id="navigationProgress">--</strong></div>
+                                    <div class="telemetry-cell"><span>Completed</span><strong id="navigationDistance">--</strong></div>
+                                    <div class="telemetry-cell"><span>Remaining</span><strong id="navigationRemaining">--</strong></div>
+                                    <div class="telemetry-cell"><span>ETA</span><strong id="navigationEta">--</strong></div>
+                                </div>
+                                <div class="navigation-progress-track" aria-hidden="true">
+                                    <div id="navigationProgressBar" class="navigation-progress-bar"></div>
+                                </div>
+                                <div id="navigationRouteStatus" class="navigation-route-status">Route status: No route</div>
+                                <div id="navigationDestination" class="navigation-destination">Distance to destination: --</div>
+                                <div class="navigation-actions">
+                                    <button id="startLiveLocationBtn" type="button">Start Live GPS</button>
+                                    <button id="followUserBtn" type="button" disabled>Follow Me</button>
+                                    <button id="stopLiveLocationBtn" type="button" hidden>Stop GPS</button>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 2. WEATHER -->
+                        <section class="dashboard-section" data-dashboard-section="weather">
+                            <button class="dashboard-section-header" type="button" aria-expanded="false">
+                                <span class="section-label-group"><span class="section-glyph">🌦️</span> Route Weather</span>
+                                <strong id="dashboardWeatherValue" class="section-stat-pill">No route</strong>
+                                <span class="dashboard-chevron">⌄</span>
+                            </button>
+                            <div id="dashboardWeatherBody" class="dashboard-section-body"></div>
+                        </section>
+
+                        <!-- 3. RISK -->
+                        <section class="dashboard-section" data-dashboard-section="risk">
+                            <button class="dashboard-section-header" type="button" aria-expanded="false">
+                                <span class="section-label-group"><span class="section-glyph">⚠️</span> Route Risk</span>
+                                <strong id="dashboardRiskValue" class="section-stat-pill">No route</strong>
+                                <span class="dashboard-chevron">⌄</span>
+                            </button>
+                            <div id="dashboardRiskBody" class="dashboard-section-body"></div>
+                        </section>
+
+                        <!-- 4. ROAD ISSUES -->
+                        <section class="dashboard-section" data-dashboard-section="issues">
+                            <button class="dashboard-section-header" type="button" aria-expanded="false">
+                                <span class="section-label-group"><span class="section-glyph">🚧</span> Road Issues</span>
+                                <strong id="dashboardIssuesValue" class="section-stat-pill">No route</strong>
+                                <span class="dashboard-chevron">⌄</span>
+                            </button>
+                            <div id="dashboardIssuesBody" class="dashboard-section-body"></div>
+                        </section>
+
+                        <!-- 5. TERRAIN -->
+                        <section class="dashboard-section" data-dashboard-section="terrain">
+                            <button class="dashboard-section-header" type="button" aria-expanded="false">
+                                <span class="section-label-group"><span class="section-glyph">🏔️</span> Terrain &amp; Elevation</span>
+                                <strong id="dashboardTerrainValue" class="section-stat-pill">No route</strong>
+                                <span class="dashboard-chevron">⌄</span>
+                            </button>
+                            <div id="dashboardTerrainBody" class="dashboard-section-body"></div>
+                        </section>
+
+                        <!-- 6. ALTERNATIVE ROUTES -->
+                        <section class="dashboard-section" data-dashboard-section="alternatives">
+                            <button class="dashboard-section-header" type="button" aria-expanded="false">
+                                <span class="section-label-group"><span class="section-glyph">🛣️</span> Alternative Routes</span>
+                                <strong id="dashboardAlternativesValue" class="section-stat-pill">No route</strong>
+                                <span class="dashboard-chevron">⌄</span>
+                            </button>
+                            <div id="dashboardAlternativesBody" class="dashboard-section-body"></div>
+                        </section>
+
+                        <!-- 7. HAZARD INTELLIGENCE -->
+                        <section class="dashboard-section" data-dashboard-section="hazards">
+                            <button class="dashboard-section-header" type="button" aria-expanded="false">
+                                <span class="section-label-group"><span class="section-glyph">🌊</span> Hazard Intelligence</span>
+                                <strong id="dashboardHazardValue" class="section-stat-pill">No route</strong>
+                                <span class="dashboard-chevron">⌄</span>
+                            </button>
+                            <div id="dashboardHazardBody" class="dashboard-section-body"></div>
+                        </section>
+
+                        <!-- 8. AI ROUTE INTELLIGENCE -->
+                        <section class="dashboard-section ai-intelligence-section" data-dashboard-section="ai-route">
+                            <button class="dashboard-section-header ai-header" type="button" aria-expanded="false">
+                                <span class="section-label-group"><span class="section-glyph ai-glyph">🤖</span> AI Route Intelligence</span>
+                                <strong id="dashboardAiValue" class="section-stat-pill ai-pill">Ready</strong>
+                                <span class="dashboard-chevron">⌄</span>
+                            </button>
+                            <div id="dashboardAiBody" class="dashboard-section-body"></div>
+                        </section>
+
+                        <!-- 9. DATA STATUS -->
+                        <section class="dashboard-section" data-dashboard-section="data-status">
+                            <button class="dashboard-section-header" type="button" aria-expanded="false">
+                                <span class="section-label-group"><span class="section-glyph">📡</span> Data Status &amp; Sync</span>
+                                <strong id="dashboardDataStatusValue" class="section-stat-pill">Live</strong>
+                                <span class="dashboard-chevron">⌄</span>
+                            </button>
+                            <div id="dashboardDataStatusBody" class="dashboard-section-body"></div>
+                        </section>
+
+                        <p class="navigation-disclaimer">Approximate GPS route tracking. Not turn-by-turn navigation.</p>
                     </div>
-                    <button id="dashboardMinimizeBtn" class="dashboard-icon-button" type="button" aria-label="Minimize dashboard">−</button>
-                </div>
 
-                <div id="dashboardEmptyState" class="dashboard-empty-state">
-                    <div class="empty-state-badge">AWAITING ROUTE</div>
-                    <strong>Plan a route to unlock intelligence telemetry:</strong>
-                    <span>Live navigation, multivariant weather, terrain analysis, real-time hazard alerts &amp; AI logistics briefing.</span>
                 </div>
+            </div>
+        </section>
 
-                <!-- NAVIGATION -->
-                <section class="dashboard-section is-open" data-dashboard-section="navigation">
-                    <button class="dashboard-section-header" type="button" aria-expanded="true">
-                        <span class="section-label-group"><span class="section-glyph">🧭</span> Live Navigation</span>
-                        <strong id="dashboardNavigationValue" class="section-stat-pill">No route</strong>
-                        <span class="dashboard-chevron">⌄</span>
-                    </button>
-                    <div class="dashboard-section-body">
-                        <div class="dashboard-grid">
-                            <div class="telemetry-cell"><span>GPS</span><strong id="navigationStatus">GPS: Off</strong></div>
-                            <div class="telemetry-cell"><span>Heading</span><strong id="navigationHeading">Unavailable</strong></div>
-                            <div class="telemetry-cell"><span>Accuracy</span><strong id="gpsAccuracy">--</strong></div>
-                            <div class="telemetry-cell"><span>Progress</span><strong id="navigationProgress">--</strong></div>
-                            <div class="telemetry-cell"><span>Completed</span><strong id="navigationDistance">--</strong></div>
-                            <div class="telemetry-cell"><span>Remaining</span><strong id="navigationRemaining">--</strong></div>
-                            <div class="telemetry-cell"><span>ETA</span><strong id="navigationEta">--</strong></div>
+        <!-- =================================================
+             PAGE 3 — 🚧 FIELD INCIDENT REPORTS
+             ================================================= -->
+        <section id="viewReports" class="app-view" aria-label="Field Incident Reports View">
+            <div class="view-content-scrollable">
+                <div class="view-inner-container reports-view-layout">
+
+                    <!-- REPORTS HEADER CARD -->
+                    <div class="reports-header-card">
+                        <div class="reports-title-wrap">
+                            <div class="reports-badge-icon" aria-hidden="true">🚧</div>
+                            <div>
+                                <h2>Field Incident Reporting</h2>
+                                <p>Real-time road obstruction transmission &amp; offline-first synchronization</p>
+                            </div>
                         </div>
-                        <div class="navigation-progress-track" aria-hidden="true">
-                            <div id="navigationProgressBar" class="navigation-progress-bar"></div>
+                        <span class="section-badge report-badge">FIELD INTEL</span>
+                    </div>
+
+                    <!-- REPORTING FORM -->
+                    <div class="reports-form-card">
+                        <div class="form-group">
+                            <label for="issueType">
+                                <span>Incident Classification</span>
+                            </label>
+                            <div class="select-wrapper">
+                                <select id="issueType" aria-label="Select incident type">
+                                    <option value="">Select Issue Type</option>
+                                    <option value="Road Block">🚧 Road Block</option>
+                                    <option value="Accident">💥 Accident</option>
+                                    <option value="Flood">🌊 Flood</option>
+                                    <option value="Landslide">⛰️ Landslide</option>
+                                    <option value="Traffic">🚗 Traffic</option>
+                                    <option value="Road Damage">🕳️ Road Damage</option>
+                                </select>
+                            </div>
                         </div>
-                        <div id="navigationRouteStatus" class="navigation-route-status">Route status: No route</div>
-                        <div id="navigationDestination" class="navigation-destination">Distance to destination: --</div>
-                        <div class="navigation-actions">
-                            <button id="startLiveLocationBtn" type="button">Start Live GPS</button>
-                            <button id="followUserBtn" type="button" disabled>Follow Me</button>
-                            <button id="stopLiveLocationBtn" type="button" hidden>Stop GPS</button>
+
+                        <div class="form-group">
+                            <label for="issueDescription">
+                                <span>Location Details &amp; Severity Description</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <input
+                                    type="text"
+                                    id="issueDescription"
+                                    placeholder="Describe exact coordinates, road section or hazard conditions"
+                                    autocomplete="off"
+                                >
+                            </div>
+                        </div>
+
+                        <button
+                            id="reportIssue"
+                            type="button"
+                            class="report-button"
+                        >
+                            <span class="btn-icon" aria-hidden="true">📡</span>
+                            <span class="btn-text">Transmit Issue Report</span>
+                        </button>
+                    </div>
+
+                    <!-- FIELD INTEL PROTOCOL CARD -->
+                    <div class="reports-protocol-card">
+                        <div class="protocol-card-header">
+                            <span class="protocol-icon">📡</span>
+                            <strong>Offline-First Synchronization Protocol</strong>
+                        </div>
+                        <p>Reports submitted without active cellular connectivity are securely stored in local device storage and automatically synced to the Supabase incident network once connection is re-established.</p>
+                        <div class="protocol-checklist">
+                            <div><span>✔</span> Instant local cache timestamping</div>
+                            <div><span>✔</span> Automatic retry upon network reconnect</div>
+                            <div><span>✔</span> Live geospatial marker synchronization on map</div>
                         </div>
                     </div>
-                </section>
 
-                <!-- WEATHER -->
-                <section class="dashboard-section" data-dashboard-section="weather">
-                    <button class="dashboard-section-header" type="button" aria-expanded="false">
-                        <span class="section-label-group"><span class="section-glyph">🌦️</span> Route Weather</span>
-                        <strong id="dashboardWeatherValue" class="section-stat-pill">No route</strong>
-                        <span class="dashboard-chevron">⌄</span>
-                    </button>
-                    <div id="dashboardWeatherBody" class="dashboard-section-body"></div>
-                </section>
-
-                <!-- RISK -->
-                <section class="dashboard-section" data-dashboard-section="risk">
-                    <button class="dashboard-section-header" type="button" aria-expanded="false">
-                        <span class="section-label-group"><span class="section-glyph">⚠️</span> Route Risk</span>
-                        <strong id="dashboardRiskValue" class="section-stat-pill">No route</strong>
-                        <span class="dashboard-chevron">⌄</span>
-                    </button>
-                    <div id="dashboardRiskBody" class="dashboard-section-body"></div>
-                </section>
-
-                <!-- ROAD ISSUES -->
-                <section class="dashboard-section" data-dashboard-section="issues">
-                    <button class="dashboard-section-header" type="button" aria-expanded="false">
-                        <span class="section-label-group"><span class="section-glyph">🚧</span> Road Issues</span>
-                        <strong id="dashboardIssuesValue" class="section-stat-pill">No route</strong>
-                        <span class="dashboard-chevron">⌄</span>
-                    </button>
-                    <div id="dashboardIssuesBody" class="dashboard-section-body"></div>
-                </section>
-
-                <!-- TERRAIN -->
-                <section class="dashboard-section" data-dashboard-section="terrain">
-                    <button class="dashboard-section-header" type="button" aria-expanded="false">
-                        <span class="section-label-group"><span class="section-glyph">🏔️</span> Terrain &amp; Elevation</span>
-                        <strong id="dashboardTerrainValue" class="section-stat-pill">No route</strong>
-                        <span class="dashboard-chevron">⌄</span>
-                    </button>
-                    <div id="dashboardTerrainBody" class="dashboard-section-body"></div>
-                </section>
-
-                <!-- ALTERNATIVE ROUTES -->
-                <section class="dashboard-section" data-dashboard-section="alternatives">
-                    <button class="dashboard-section-header" type="button" aria-expanded="false">
-                        <span class="section-label-group"><span class="section-glyph">🛣️</span> Alternative Routes</span>
-                        <strong id="dashboardAlternativesValue" class="section-stat-pill">No route</strong>
-                        <span class="dashboard-chevron">⌄</span>
-                    </button>
-                    <div id="dashboardAlternativesBody" class="dashboard-section-body"></div>
-                </section>
-
-                <!-- HAZARD INTELLIGENCE -->
-                <section class="dashboard-section" data-dashboard-section="hazards">
-                    <button class="dashboard-section-header" type="button" aria-expanded="false">
-                        <span class="section-label-group"><span class="section-glyph">🌊</span> Hazard Intelligence</span>
-                        <strong id="dashboardHazardValue" class="section-stat-pill">No route</strong>
-                        <span class="dashboard-chevron">⌄</span>
-                    </button>
-                    <div id="dashboardHazardBody" class="dashboard-section-body"></div>
-                </section>
-
-                <!-- AI ROUTE INTELLIGENCE -->
-                <section class="dashboard-section ai-intelligence-section" data-dashboard-section="ai-route">
-                    <button class="dashboard-section-header ai-header" type="button" aria-expanded="false">
-                        <span class="section-label-group"><span class="section-glyph ai-glyph">🤖</span> AI Route Intelligence</span>
-                        <strong id="dashboardAiValue" class="section-stat-pill ai-pill">Ready</strong>
-                        <span class="dashboard-chevron">⌄</span>
-                    </button>
-                    <div id="dashboardAiBody" class="dashboard-section-body"></div>
-                </section>
-
-                <!-- DATA STATUS -->
-                <section class="dashboard-section" data-dashboard-section="data-status">
-                    <button class="dashboard-section-header" type="button" aria-expanded="false">
-                        <span class="section-label-group"><span class="section-glyph">📡</span> Data Status &amp; Sync</span>
-                        <strong id="dashboardDataStatusValue" class="section-stat-pill">Live</strong>
-                        <span class="dashboard-chevron">⌄</span>
-                    </button>
-                    <div id="dashboardDataStatusBody" class="dashboard-section-body"></div>
-                </section>
-
-                <p class="navigation-disclaimer">Approximate GPS route tracking. Not turn-by-turn navigation.</p>
-            </aside>
-
+                </div>
+            </div>
         </section>
 
     </main>
+
+    <!-- =====================================================
+         MOBILE BOTTOM NAVIGATION BAR
+         ===================================================== -->
+    <nav class="mobile-bottom-nav" aria-label="Mobile View Navigation">
+        <button class="mobile-nav-item active" data-view="map" type="button" aria-selected="true">
+            <span class="mobile-nav-icon">🗺️</span>
+            <span class="mobile-nav-label">Map</span>
+        </button>
+        <button class="mobile-nav-item" data-view="intelligence" type="button" aria-selected="false">
+            <span class="mobile-nav-icon">🧠</span>
+            <span class="mobile-nav-label">Intelligence</span>
+        </button>
+        <button class="mobile-nav-item" data-view="reports" type="button" aria-selected="false">
+            <span class="mobile-nav-icon">🚧</span>
+            <span class="mobile-nav-label">Reports</span>
+        </button>
+    </nav>
 
     <!-- =====================================================
          LEAFLET JAVASCRIPT
@@ -372,13 +446,48 @@
     <script src="app.js"></script>
 
     <!-- =====================================================
-         ANALYZE ROUTE BUTTON LISTENER
+         ANALYZE ROUTE & VIEW SWITCHER SCRIPT
          ===================================================== -->
     <script>
+        // Analyze button listener
         const analyzeButton = document.getElementById("analyzeRoute");
         if (analyzeButton) {
             analyzeButton.addEventListener("click", analyzeRoute);
         }
+
+        // Client-side Multi-View Switcher
+        function switchAppView(viewName) {
+            if (!viewName) return;
+
+            // 1. Update active states on both Desktop and Mobile nav buttons
+            document.querySelectorAll("[data-view]").forEach(btn => {
+                const isActive = btn.getAttribute("data-view") === viewName;
+                btn.classList.toggle("active", isActive);
+                btn.setAttribute("aria-selected", String(isActive));
+            });
+
+            // 2. Toggle active view container
+            const targetViewId = "view" + viewName.charAt(0).toUpperCase() + viewName.slice(1);
+            document.querySelectorAll(".app-view").forEach(view => {
+                const isActive = view.id === targetViewId;
+                view.classList.toggle("active-view", isActive);
+            });
+
+            // 3. Recalculate Leaflet map size when returning to Map view
+            if (viewName === "map" && typeof map !== "undefined" && map) {
+                setTimeout(() => {
+                    map.invalidateSize();
+                }, 80);
+            }
+        }
+
+        // Attach click listeners to all data-view buttons
+        document.querySelectorAll("[data-view]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const targetView = btn.getAttribute("data-view");
+                switchAppView(targetView);
+            });
+        });
     </script>
 
 </body>
